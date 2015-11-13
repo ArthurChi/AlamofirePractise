@@ -36,13 +36,13 @@ class DownloadedPhotoBrowserCollectionViewController: UICollectionViewController
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
     
-    if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+    if let directoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] {
       var error: NSError?
       
       let urls: [AnyObject]?
       do {
         urls = try NSFileManager.defaultManager().contentsOfDirectoryAtURL(directoryURL, includingPropertiesForKeys: nil, options: [])
-      } catch var error1 as NSError {
+      } catch let error1 as NSError {
         error = error1
         urls = nil
       }
