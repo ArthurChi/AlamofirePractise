@@ -44,12 +44,11 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
         
         let imageURL = (photos.objectAtIndex(indexPath.row) as! PhotoInfo).url
+        cell.imageView.image = nil
         
-        Alamofire.request(.GET, imageURL).responseData { (response) -> Void in
-            
-            let image = UIImage(data: response.data!)
-            cell.imageView.image = image
-        }
+        cell.request = Alamofire.request(.GET, imageURL).responseImage({ (response) -> Void in
+            cell.imageView.image = response.result.value
+        })
         
         return cell
     }
@@ -144,6 +143,8 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                     self.currentPage++
                     
                 })
+            } else {
+                print(response.result.value)
             }
             
             self.populatingPhotos = false
@@ -153,6 +154,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 
 class PhotoBrowserCollectionViewCell: UICollectionViewCell {
     let imageView = UIImageView()
+    var request: Alamofire.Request?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

@@ -28,6 +28,11 @@ extension Alamofire.Request {
             return Result.Success(image!)
         }
     }
+    
+    func responseImage(completionHandler:Response<UIImage, NSError> -> Void) -> Self {
+        
+        return response(responseSerializer: Request.imageResponseSerializer(), completionHandler: completionHandler)
+    }
 }
 
 struct Five100px {
