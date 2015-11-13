@@ -122,28 +122,27 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
             if response.result.isSuccess {
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
-                    Alamofire.request(.GET, "https://api.500px.com/v1/photos", parameters: ["consumer_key" : "RjWKQpnrMVQIeebag61QfIcvObig9gNy6mLvfK8U"]).responseJSON { (response) -> Void in
-                        
-                        let photoInfos = (response.result.value?.valueForKey("photos") as! [NSDictionary]).filter({
-                            ($0["nsfw"] as! Bool) == false
-                        }).map {
-                            PhotoInfo(id: $0["id"] as! Int, url: $0["image_url"] as! String)
-                        }
-                        
-                        let lastItem = self.photos.count
-                        
-                        self.photos.addObjectsFromArray(photoInfos)
-                        
-                        let indexPaths = (lastItem..<self.photos.count).map {
-                            NSIndexPath(forItem: $0, inSection: 0)
-                        }
-                        
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            self.collectionView?.insertItemsAtIndexPaths(indexPaths)
-                        })
-                        
-                        self.currentPage++
+                    
+                    let photoInfos = (response.result.value?.valueForKey("photos") as! [NSDictionary]).filter({
+                        ($0["nsfw"] as! Bool) == false
+                    }).map {
+                        PhotoInfo(id: $0["id"] as! Int, url: $0["image_url"] as! String)
                     }
+                    
+                    let lastItem = self.photos.count
+                    
+                    self.photos.addObjectsFromArray(photoInfos)
+                    
+                    let indexPaths = (lastItem..<self.photos.count).map {
+                        NSIndexPath(forItem: $0, inSection: 0)
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.collectionView?.insertItemsAtIndexPaths(indexPaths)
+                    })
+                    
+                    self.currentPage++
+                    
                 })
             }
             

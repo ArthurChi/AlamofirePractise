@@ -9,6 +9,27 @@
 import UIKit
 import Alamofire
 
+extension Alamofire.Request {
+    
+    class func imageResponseSerializer() -> ResponseSerializer<UIImage, NSError> {
+        
+        return ResponseSerializer { _, response, data, error in
+            
+            guard error == nil else { return .Failure(error!) }
+            
+            guard let validData = data where validData.length > 0 else {
+                let failureReason = "Image data was nil or zero length."
+                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
+                return .Failure(error)
+            }
+            
+            let image = UIImage(data: data!, scale: UIScreen.mainScreen().scale)
+            
+            return Result.Success(image!)
+        }
+    }
+}
+
 struct Five100px {
     
     enum Router: URLRequestConvertible {
