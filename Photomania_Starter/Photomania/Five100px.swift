@@ -9,8 +9,31 @@
 import UIKit
 import Alamofire
 
+@objc public protocol ResponseObjectSerializable {
+    init(response: NSHTTPURLResponse, representation: AnyObject)
+}
+
 extension Alamofire.Request {
     
+    public func responseObject<T: ResponseObjectSerializable>(completionHandler:Response<T, NSError> -> Void) -> Self {
+        
+        let responseSerializerForT: ResponseSerializer<T, NSError> = ResponseSerializer { request, response, data, error in
+            
+            let res = Request.JSONResponseSerializer(options: .AllowFragments).serializeResponse(request, response, data, error)
+            
+            if let JSON = res.value {
+                return Result.Success(T(response: response!, representation: JSON))
+            } else {
+                let failureReason = "JSON could not be serialized. Input data was nil or zero length."
+                let error = Error.errorWithCode(.JSONSerializationFailed, failureReason: failureReason)
+                return Result.Failure(error)
+            }
+        }
+        
+       return response(responseSerializer: responseSerializerForT, completionHandler: completionHandler)
+    }
+    
+    // 图片响应序列化方法
     class func imageResponseSerializer() -> ResponseSerializer<UIImage, NSError> {
         
         return ResponseSerializer { _, response, data, error in
@@ -23,9 +46,13 @@ extension Alamofire.Request {
                 return .Failure(error)
             }
             
-            let image = UIImage(data: data!, scale: UIScreen.mainScreen().scale)
-            
-            return Result.Success(image!)
+            if let image = UIImage(data: data!, scale: UIScreen.mainScreen().scale) {
+                return Result.Success(image)
+            } else {
+                let failureReason = "Image can not be init"
+                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
+                return .Failure(error)
+            }
         }
     }
     
