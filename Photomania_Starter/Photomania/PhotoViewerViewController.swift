@@ -8,6 +8,7 @@
 
 import UIKit
 import QuartzCore
+import Alamofire
 
 class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopoverPresentationControllerDelegate, UIActionSheetDelegate {
     var photoID: Int = 0
@@ -24,6 +25,34 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         super.viewDidLoad()
         
         setupView()
+        
+        loadPhoto()
+    }
+    
+    func loadPhoto() {
+        
+        Alamofire.request(Five100px.Router.PhotoInfo(self.photoID, .Large)).validate().responseObject { (response: Response<PhotoInfo,NSError>) -> Void in
+            
+            if response.result.isSuccess {
+                
+                self.photoInfo = response.result.value
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.addButtomBar()
+                    self.title = self.photoInfo!.name
+                }
+                
+                Alamofire.request(.GET, self.photoInfo!.url).validate().responseImage({ (response) -> Void in
+                    
+                    if response.result.isSuccess {
+                        
+                        self.imageView.image = response.result.value
+                        self.imageView.frame = self.centerFrameFromImage(self.imageView.image)
+                        self.spinner.stopAnimating()
+                        self.centerScrollViewContents()
+                    }
+                })
+            }
+        }
     }
     
     func setupView() {

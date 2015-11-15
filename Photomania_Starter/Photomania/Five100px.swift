@@ -144,7 +144,7 @@ struct Five100px {
     }
 }
 
-class PhotoInfo: NSObject {
+class PhotoInfo: NSObject, ResponseObjectSerializable {
     let id: Int
     let url: String
     
