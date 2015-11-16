@@ -41,13 +41,36 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
-        
         let imageURL = (photos.objectAtIndex(indexPath.row) as! PhotoInfo).url
-        cell.imageView.image = nil
+        // 1
+        if cell.request?.request!.URLString != imageURL {
+            cell.request?.cancel()
+        }
         
-        cell.request = Alamofire.request(.GET, imageURL).responseImage({ (response) -> Void in
-            cell.imageView.image = response.result.value
+        // 2
+        if let image = self.imageCache.objectForKey(imageURL) as? UIImage {
+            cell.imageView.image = image
+        } else {
+            // 3
+            cell.imageView.image = nil
+        }
+        // 4
+        cell.request = Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage({ (response) -> Void in
+            
+            if response.result.isSuccess {
+                
+                if let imageReqStr = response.request?.URLString, image = response.result.value {
+                    self.imageCache.setObject(image, forKey: imageReqStr)
+                    
+                    // 6
+                    if imageReqStr == cell.request?.request?.URLString {
+                        cell.imageView.image = image
+                    }
+                }
+            }
         })
         
         return cell
@@ -104,8 +127,15 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         }
     }
     
+    let imageCache = NSCache()
+    
     func handleRefresh() {
-        
+        refreshControl.beginRefreshing()
+        self.photos.removeAllObjects()
+        self.currentPage = 1
+        self.collectionView!.reloadData()
+        refreshControl.endRefreshing()
+        populatePhotos()
     }
     
     func populatePhotos() {
