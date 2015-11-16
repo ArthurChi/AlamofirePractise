@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
         UINavigationBar.appearance().barStyle = .BlackTranslucent
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         
@@ -26,8 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIBarButtonItem.appearance().tintColor = UIColor.whiteColor()
         
         UIButton.appearance().tintColor = UIColor.whiteColor()
-        
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
         
         return true
     }

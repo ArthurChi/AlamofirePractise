@@ -19,6 +19,7 @@
 		22F2B01819A5C39900939296 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22F2B01719A5C39900939296 /* Images.xcassets */; };
 		22F2B02419A5C39A00939296 /* PhotomaniaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2B02319A5C39A00939296 /* PhotomaniaTests.swift */; };
 		22F2B03119A5C4B100939296 /* PhotoBrowserCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2B03019A5C4B100939296 /* PhotoBrowserCollectionViewController.swift */; };
+		2A4EBC271BF9937F001D770C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A4EBC261BF9937F001D770C /* Default-568h@2x.png */; };
 		2AB36E2B1BF5891400073A9D /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 2AB36E2A1BF5891400073A9D /* Podfile */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +62,8 @@
 		22F2B02219A5C39A00939296 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22F2B02319A5C39A00939296 /* PhotomaniaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotomaniaTests.swift; sourceTree = "<group>"; };
 		22F2B03019A5C4B100939296 /* PhotoBrowserCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserCollectionViewController.swift; sourceTree = "<group>"; };
-		2AB36E2A1BF5891400073A9D /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		2A4EBC261BF9937F001D770C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		2AB36E2A1BF5891400073A9D /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A4005FD1D06A62852D9C84EE /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A9584A864DA7E6B67AFAFD63 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D7BF35168AB196829EDBBCE0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +91,7 @@
 		22F2B00219A5C39900939296 = {
 			isa = PBXGroup;
 			children = (
+				2A4EBC261BF9937F001D770C /* Default-568h@2x.png */,
 				2AB36E2A1BF5891400073A9D /* Podfile */,
 				22F2B00D19A5C39900939296 /* Photomania */,
 				22F2B02019A5C39A00939296 /* PhotomaniaTests */,
@@ -254,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AB36E2B1BF5891400073A9D /* Podfile in Resources */,
+				2A4EBC271BF9937F001D770C /* Default-568h@2x.png in Resources */,
 				22F2B01619A5C39900939296 /* Main.storyboard in Resources */,
 				22F2B01819A5C39900939296 /* Images.xcassets in Resources */,
 			);
