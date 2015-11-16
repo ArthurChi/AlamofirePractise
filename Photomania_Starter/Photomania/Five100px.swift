@@ -9,11 +9,32 @@
 import UIKit
 import Alamofire
 
+public protocol ResponseCollectionSerializable {
+    
+    static func collection(response response: NSHTTPURLResponse, representation: AnyObject) -> [Self]
+}
+
 @objc public protocol ResponseObjectSerializable {
     init(response: NSHTTPURLResponse, representation: AnyObject)
 }
 
 extension Alamofire.Request {
+    
+    public func responseCollection<T: ResponseCollectionSerializable>(completionHandler:Response<[T], NSError> -> Void) -> Self {
+        
+        let serializer: ResponseSerializer<[T], NSError> = ResponseSerializer { (request, response, data, error) in
+            let JSONSerializer = Request.JSONResponseSerializer(options: .AllowFragments).serializeResponse(request, response, data, error)
+            
+            if let JSON = JSONSerializer.value {
+                
+                return Result.Success(T.collection(response: response!, representation: JSON))
+            } else {
+                return Result.Failure(error!)
+            }
+        }
+        
+        return response(responseSerializer: serializer, completionHandler: completionHandler)
+    }
     
     public func responseObject<T: ResponseObjectSerializable>(completionHandler:Response<T, NSError> -> Void) -> Self {
         
@@ -210,7 +231,16 @@ class PhotoInfo: NSObject, ResponseObjectSerializable {
     }
 }
 
-class Comment {
+final class Comment: NSObject, ResponseCollectionSerializable {
+    
+    class func collection(response response: NSHTTPURLResponse, representation: AnyObject) -> [Comment] {
+        var comments = [Comment]()
+        for comment in representation.valueForKeyPath("comments") as! [NSDictionary] {
+            comments.append(Comment(JSON: comment))
+        }
+        return comments
+    }
+    
     let userFullname: String
     let userPictureURL: String
     let commentBody: String
@@ -219,5 +249,11 @@ class Comment {
         userFullname = JSON.valueForKeyPath("user.fullname") as! String
         userPictureURL = JSON.valueForKeyPath("user.userpic_url") as! String
         commentBody = JSON.valueForKeyPath("body") as! String
+    }
+    
+    override var description: String {
+        
+        let keys = ["userFullname", "userPictureURL", "commentBody"];
+        return dictionaryWithValuesForKeys(keys).description
     }
 }

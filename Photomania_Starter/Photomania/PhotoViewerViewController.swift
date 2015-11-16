@@ -201,6 +201,33 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
     }
     
     func downloadPhoto() {
+        
+        Alamofire.request(Five100px.Router.PhotoInfo(photoInfo!.id, .XLarge)).validate().responseJSON { (response) -> Void in
+            
+            if response.result.isSuccess {
+                let jsonDictionary = (response.result.value as! NSDictionary)
+                let imageURL = jsonDictionary.valueForKeyPath("photo.image_url") as! String
+                // 2
+                let destination = Alamofire.Request.suggestedDownloadDestination(directory: .DocumentDirectory, domain: .UserDomainMask)
+                // 3
+                Alamofire.download(.GET, imageURL, destination: destination)
+                let progressIndicatorView = UIProgressView(frame: CGRect(x: 0.0, y: 80.0, width: self.view.bounds.width, height: 10.0))
+                progressIndicatorView.tintColor = UIColor.blueColor()
+                self.view.addSubview(progressIndicatorView)
+                // 5
+                Alamofire.download(.GET, imageURL, destination: destination).progress({ (_, totalBytesRead, totalBytesExpectedToRead) -> Void in
+                    
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        // 6
+                        progressIndicatorView.setProgress(Float(totalBytesRead) / Float(totalBytesExpectedToRead), animated: true)
+                        // 7
+                        if totalBytesRead == totalBytesExpectedToRead {
+                            progressIndicatorView.removeFromSuperview()
+                        }
+                    })
+                })
+            }
+        }
     }
     
     // MARK: Gesture Recognizers
